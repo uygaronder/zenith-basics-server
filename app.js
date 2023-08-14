@@ -7,7 +7,15 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 
-const productRouter = require('./routes/products');
+require('./src/models/ReviewModel.js');
+require('./src/models/ProductModel.js');
+require('./src/models/UserModel.js');
+
+const productRouter = require('./src/routes/product.js');
+const userRouter = require('./src/routes/user.js');
+
+app.use('/product', productRouter);
+app.use('/user', userRouter);
 
 mongoose.connect(process.env.DATABASE_URL,{
     useNewUrlParser: true,

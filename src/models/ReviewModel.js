@@ -18,22 +18,28 @@ const reviewSchema = new mongoose.Schema({
 
 reviewSchema.methods.like = function () {
     this.reviewLikes += 1;
-    return this.reviewLikes;
+    return this.save();
 };
 
 reviewSchema.methods.unlike = function () {
     this.reviewLikes -= 1;
-    return this.reviewLikes;
+    return this.save();
 };
 
 reviewSchema.methods.dislike = function () {
     this.reviewDislikes += 1;
-    return this.reviewDislikes;
+    return this.save();
 };
 
 reviewSchema.methods.undislike = function () {
     this.reviewDislikes -= 1;
-    return this.reviewDislikes;
+    return this.save();
 };
 
-module.exports = mongoose.model('Review', reviewSchema);
+reviewSchema.methods.edit = function (newText) {
+    this.reviewText = newText;
+    this.edited = true;
+    return this.save();
+};
+
+const Review = mongoose.model('Review', reviewSchema);
