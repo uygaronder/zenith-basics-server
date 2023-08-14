@@ -7,7 +7,11 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 
-mongoose.connect(process.env.DATABASE_URL);
+const productRouter = require('./routes/products');
+
+mongoose.connect(process.env.DATABASE_URL,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true});
 const db = mongoose.connection;
 db.on('error', (error) => {
     console.log(error);
