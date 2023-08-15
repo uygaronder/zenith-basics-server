@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
-    reviewId: String,
     reviewDate: Date,
     reviewRating: Number,
     reviewText: String,

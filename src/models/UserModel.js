@@ -7,7 +7,6 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     age: Number,
-    _id: mongoose.Types.ObjectId,
     email: {
         type: String,
         required: true
@@ -16,7 +15,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    hashed_password: String,
+    password: {
+        type: String,
+        required: true
+    },
     date: {
         type: Date,
         default: Date.now
@@ -25,94 +27,14 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    wishlist: {
-        type: Array,
-        default: [
-            {
-                productId: String,
-                wishlistId: String,
-            }
-        ],
-    },
-    notifications: {
-        type: Array,
-        default: [
-            {
-                notificationType: String,
-                notificationId: String,
-                notificationDate: Date,
-                notificationText: String,
-                notificationRead: Boolean,
-            }
-        ],
-    },
-    cart: {
-        type: Array,
-        default: [
-            {
-                productId: String,
-                cartId: String,
-                quantity: Number,
-            }
-        ],
-    },
-    orders: {
-        type: Array,
-        default: [
-            {
-                orderId: String,
-                orderDate: Date,
-                orderStatus: String,
-                orderTotal: Number,
-                orderItems: Array,
-            }
-        ],
-    },
-    address: {
-        type: Array,
-        default: [
-            {
-                addressId: String,
-                addressName: String,
-                addressLine1: String,
-                addressLine2: String,
-                city: String,
-                state: String,
-                country: String,
-                zipCode: String,
-                phoneNumber: String,
-            }
-        ],
-    },
-    payment: {
-        type: Array,
-        default: [
-            {
-                cardNumber: String,
-                cardName: String,
-                cardExpiry: String,
-                cardCVC: String,
-            }
-        ],
-    },
-    reviews: {
-        type: Array,
-        default: [
-            {
-                productId: String,
-                reviewId: String,
-            }
-        ],
-    },
-    reactedReviews: {
-        type: Array,
-        default: [
-            {
-                reviewId: String,
-                reaction: String,
-            }
-        ],
-    },
+    wishlist: Array,
+    notifications: Array,
+    cart: Array,
+    orders: Array,
+    address: Array,
+    payment: Array,
+    reviews: Array,
+    reactedReviews: Array,
     image: {
         type: String,
         default: 'https://res.cloudinary.com/dxkufsejm/image/upload/v1620059953/placeholder-image-person_1_zjxq8c.png'
@@ -121,6 +43,90 @@ const userSchema = new mongoose.Schema({
     resetPasswordExpires: Date,
 });
 
+const notificationSchema = new mongoose.Schema({
+    notificationId: String,
+    notificationType: String,
+    notificationRead: {
+        type: Boolean,
+        default: false
+    },
+    notificationMessage: String,
+    notificationDate: {
+        type: Date,
+        default: Date.now
+    },
+    notificationLink: String
+});
+
+const orderSchema = new mongoose.Schema({
+    orderId: String,
+    orderDate: {
+        type: Date,
+        default: Date.now
+    },
+    orderStatus: String,
+    orderTotal: Number,
+    orderAddress: Object,
+    orderPayment: Object
+});
+
+const addressSchema = new mongoose.Schema({
+    addressId: String,
+    addressName: String,
+    addressStreet: String,
+    addressCity: String,
+    addressState: String,
+    addressZip: String,
+    addressCountry: String,
+    addressPhone: String,
+    addressDefault: Boolean
+});
+
+const paymentSchema = new mongoose.Schema({
+    paymentId: String,
+    paymentName: String,
+    paymentCard: String,
+    paymentCvv: String,
+    paymentExpMon: String,
+    paymentExpYear: String,
+    paymentDefault: Boolean
+});
+
+const reviewSchema = new mongoose.Schema({
+    reviewId: String,
+    reviewDate: {
+        type: Date,
+        default: Date.now
+    },
+    reviewRating: Number,
+    reviewTitle: String,
+    reviewBody: String,
+    reviewProduct: Object,
+    reviewUser: Object,
+    reviewReactions: Array
+});
+
+const reactedReviewSchema = new mongoose.Schema({
+    reactedReviewId: String,
+    reactedReviewDate: {
+        type: Date,
+        default: Date.now
+    },
+    reactedReviewRating: Number,
+    reactedReviewTitle: String,
+    reactedReviewBody: String,
+    reactedReviewProduct: Object,
+    reactedReviewUser: Object,
+    reactedReviewReactions: Array
+});
+
+const cartSchema = new mongoose.Schema({
+    productId: String,
+    productName: String,
+    productPrice: Number,
+    productImage: String,
+    productQuantity: Number
+});
 
 userSchema.pre('save', async function (next) {
     try {
@@ -280,6 +286,27 @@ userSchema.methods.updateCartItem = async function (id, quantity) {
             }
             return item;
         });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+userSchema.methods.newUser = async function (user) {
+    try {
+        this.name = user.name;
+        this.email = user.email;
+        this.password = user.password;
+        this._id = user._id;
+    } catch (err) {
+        console.log(err);
+    }  
+};
+
+userSchema.methods.hash = async function (password) {
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt);
+        return hashed;
     } catch (err) {
         console.log(err);
     }
