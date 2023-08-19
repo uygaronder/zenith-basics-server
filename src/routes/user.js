@@ -32,6 +32,17 @@ userRouter.get("/users/:id", (req, res, next) => {
         .catch(next);
 });
 
+userRouter.get("/sendLoggedInUser", authenticated, (req, res, next) => {
+    if(!req.session.passport.user) {
+        return res.json({message: "Not Logged in"});
+    }
+    User.findById(req.session.passport.user)
+        .then(user => {
+            user.password = undefined;
+            res.json({user: user});
+        })
+});
+
 userRouter.post("/newUser", (req, res, next) => {
     User.find({email: req.body.email})
         .then(user => {
@@ -49,22 +60,22 @@ userRouter.post("/newUser", (req, res, next) => {
         })
 });
 
+
 userRouter.post("/login", (req, res, next) => {
-    User.find({email: req.body.email})
-        .then(user => {
-            if(user.length > 0) {
-                if(bcrypt.compareSync(req.body.password, user[0].password)) {
-                    passport.authenticate("local")(req, res, () => {
-                        res.json({message: "success", user: user[0]});
-                    });
-                } else {
-                    res.json({message: "Incorrect password"});
-                }
-            } else {
-                res.json({message: "User does not exist"});
+    passport.authenticate("local", (err, user) => {
+        if(err) {
+            return next(err);
+        }
+        if(!user) {
+            return res.json({message: "User not found"});
+        }
+        req.logIn(user, (err) => {
+            if(err) {
+                return next(err);
             }
-        })
-        .catch(next);
+            return res.json({message: "success"});
+        });
+    })(req, res);
 });
 
 module.exports = userRouter;
