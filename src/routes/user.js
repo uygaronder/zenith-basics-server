@@ -33,6 +33,7 @@ userRouter.get("/users/:id", (req, res, next) => {
 });
 
 userRouter.get("/sendLoggedInUser", authenticated, (req, res, next) => {
+    console.log(req.session.passport.user)
     if(!req.session.passport.user) {
         return res.json({message: "Not Logged in"});
     }
@@ -76,6 +77,11 @@ userRouter.post("/login", (req, res, next) => {
             return res.json({message: "success"});
         });
     })(req, res);
+});
+
+userRouter.get("/logout", (req, res, next) => {
+    req.logOut();
+    res.json({message: "success"});
 });
 
 module.exports = userRouter;
