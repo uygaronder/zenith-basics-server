@@ -79,8 +79,10 @@ userRouter.post("/login", (req, res, next) => {
     })(req, res);
 });
 
-userRouter.get("/logout", (req, res, next) => {
-    req.logOut();
+userRouter.delete("/logout", (req, res, next) => {
+    req.logout((err) => {
+        if(err) console.log(err);
+    });
     res.json({message: "success"});
 });
 

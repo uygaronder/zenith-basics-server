@@ -10,6 +10,7 @@ const cors = require('cors');
 const MongoStore = require("connect-mongo");
 const session = require('express-session');
 const flash = require('express-flash');
+const methodOverride = require("method-override");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,29 +34,30 @@ app.set("trust proxy", 1);
 
 mongoose.connect(process.env.DATABASE_URL,{
     useNewUrlParser: true,
-    useUnifiedTopology: true});
-    const db = mongoose.connection;
-    db.on('error', (error) => {
-        console.log(error);
-    });
-    db.once('open', () => {
-        console.log('Connected to Database');
-    });
-    
-    app.use(express.json());
-    app.use(cors(
-        {
-            origin: process.env.APP_URL,
-            credentials: true,
-            secure: process.env.BUILD === "production" ? true : false,
-        }
-        ));
-        app.use(express.urlencoded({ extended: true }));
-        app.use(session({
-            secret: process.env.SESSION_SECRET,
-            resave: false,
-            saveUninitialized: true,
-            cookie: {
+    useUnifiedTopology: true
+});
+const db = mongoose.connection;
+db.on('error', (error) => {
+    console.log(error);
+});
+db.once('open', () => {
+    console.log('Connected to Database');
+});
+
+app.use(express.json());
+app.use(cors(
+    {
+        origin: process.env.APP_URL,
+        credentials: true,
+        secure: process.env.BUILD === "production" ? true : false,
+    }
+    ));
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
         secure: process.env.BUILD === "production" ? true : false,
         maxAge: 1000 * 60 * 60 * 24 * 7,
         sameSite: process.env.BUILD === "production" ? 'none' : 'lax',
@@ -66,9 +68,10 @@ mongoose.connect(process.env.DATABASE_URL,{
         ttl: 60 * 60 * 24 * 7,
     }),
 }));
-
+    
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride("_method"))
 
 const productRouter = require('./src/routes/product.js');
 const userRouter = require('./src/routes/user.js');
