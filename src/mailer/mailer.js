@@ -1,13 +1,17 @@
 const nodemailer = require("nodemailer");
 
 const smtpOptions = {
-    port: process.env.EMAIL_PORT,
     service: process.env.EMAIL_SERVICE,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE,
     auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,
     },
 };
+
+console.log(smtpOptions)
 
 const  transport = nodemailer.createTransport({smtpOptions});
 
@@ -36,7 +40,5 @@ const sendEmail = async (email, subject, text, html) => {
         }
     });
 }
-
-console.log("Mailer Loaded");
 
 module.exports = sendEmail;
