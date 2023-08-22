@@ -27,6 +27,7 @@ app.use(cookieParser());
 require('./src/models/ReviewModel.js');
 require('./src/models/ProductModel.js');
 require('./src/models/UserModel.js');
+require('./src/models/TokenModel.js');
 
 const User = require('./src/models/UserModel.js');
 
@@ -75,9 +76,11 @@ app.use(methodOverride("_method"))
 
 const productRouter = require('./src/routes/product.js');
 const userRouter = require('./src/routes/user.js');
+const verifyRouter = require('./src/routes/verify.js');
 
 app.use('/product', productRouter);
 app.use('/user', userRouter);
+app.use('/verify', verifyRouter);
 
 const initializePass = require("./src/utils/passport-config");
 initializePass(
