@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
 
+const verificationTemplate = require("./templates/VerificationEmailTemplate");
+
 const smtpOptions = {
     service: process.env.EMAIL_SERVICE,
     host: process.env.EMAIL_HOST,
@@ -21,22 +23,33 @@ transport.verify((error, success) => {
     }
 });
 
-const sendEmail = async (email, subject, text, html) => {
+const sendEmail = async (template, options) => {
     const mailOptions = {
-        from: process.env.EMAIL,
+        from: process.env.EMAIL_FROM,
         to: email,
         subject: subject,
-        text: text,
         html: html,
     };
-
+    switch (template) {
+        case "verification":
+            mailOptions.html = verificationTemplate(options.name, options.token, options.email);
+            break;
+        default:
+            break;
+    }
+    console.log(mailOptions)
+    /*
     transport.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
         } else {
             console.log(`Email sent: ${info.response}`);
         }
-    });
+    });*/
 }
+
+//sendEmail("uonder50@gmail.com", "Email Verification", "Teste", "<h1>Teste</h1>")
+
+
 
 module.exports = sendEmail;

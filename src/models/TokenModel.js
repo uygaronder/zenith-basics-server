@@ -11,6 +11,10 @@ const tokenSchema = new Schema({
     type: String,
     required: true,
   },
+  validUntil: {
+    type: Date,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Token", tokenSchema);

@@ -17,7 +17,7 @@ verifyRouter.get("/:token", async (req, res) => {
             return res.status(400).json({ message: "This user has already been verified." });
         } else {
             const token = await Token.findOne({ userId: user._id });
-            if (!token) {
+            if (!token && !token.validUntil < Date.now()) {
                 return res.status(400).json({ message: "We were unable to find a valid token. Your token may have expired." });
             } else {
                 const salt = await bcrypt.genSalt();
@@ -31,5 +31,13 @@ verifyRouter.get("/:token", async (req, res) => {
         }
     });
 });
+
+verifyRouter.post("/sendVerifyEmail", async (req, res) => {
+    sendEmail("verification", {
+        name: req.body.name,
+        token: req.body.token,
+        email: req.body.email,
+    });
+})
 
 module.exports = verifyRouter;
