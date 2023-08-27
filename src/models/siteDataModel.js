@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const setDataSchema = new mongoose.Schema({
+const siteDataSchema = new mongoose.Schema({
     hero: [
         {
             image: String,
@@ -76,3 +76,69 @@ siteDataSchema.methods.addBestSeller = function (id) {
     this.bestSeller.push({ id });
     return this.save();
 };
+
+siteDataSchema.methods.removeBestSeller = function (id) {
+    this.bestSeller = this.bestSeller.filter((item) => item._id.toString() !== id);
+    return this.save();
+};
+
+siteDataSchema.methods.addNewProduct = function (id) {
+    this.newProduct.push({ id });
+    return this.save();
+};
+
+siteDataSchema.methods.removeNewProduct = function (id) {
+    this.newProduct = this.newProduct.filter((item) => item._id.toString() !== id);
+    return this.save();
+};
+
+siteDataSchema.methods.addCategory = function (id, slug) {
+    this.category.push({ id, slug });
+    return this.save();
+};
+
+siteDataSchema.methods.removeCategory = function (id) {
+    this.category = this.category.filter((item) => item._id.toString() !== id);
+    return this.save();
+};
+
+siteDataSchema.methods.addSubCategory = function (id, slug, categoryID) {
+    const category = this.category.find((item) => item._id.toString() === categoryID);
+    category.subCategory.push({ id, slug });
+    return this.save();
+};
+
+siteDataSchema.methods.removeSubCategory = function (id, categoryID) {
+    const category = this.category.find((item) => item._id.toString() === categoryID);
+    category.subCategory = category.subCategory.filter((item) => item._id.toString() !== id);
+    return this.save();
+};
+
+siteDataSchema.methods.addProductToCategory = function (id, categoryID) {
+    const category = this.category.find((item) => item._id.toString() === categoryID);
+    category.products.push({ id });
+    return this.save();
+};
+
+siteDataSchema.methods.removeProductFromCategory = function (id, categoryID) {
+    const category = this.category.find((item) => item._id.toString() === categoryID);
+    category.products = category.products.filter((item) => item._id.toString() !== id);
+    return this.save();
+};
+
+siteDataSchema.methods.addProductToSubCategory = function (id, subCategoryID, categoryID) {
+    const category = this.category.find((item) => item._id.toString() === categoryID);
+    const subCategory = category.subCategory.find((item) => item._id.toString() === subCategoryID);
+    subCategory.products.push({ id });
+    return this.save();
+};
+
+siteDataSchema.methods.removeProductFromSubCategory = function (id, subCategoryID, categoryID) {
+    const category = this.category.find((item) => item._id.toString() === categoryID);
+    const subCategory = category.subCategory.find((item) => item._id.toString() === subCategoryID);
+    subCategory.products = subCategory.products.filter((item) => item._id.toString() !== id);
+    return this.save();
+};
+
+
+module.exports = mongoose.model('Site', siteDataSchema);

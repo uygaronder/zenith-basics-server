@@ -11,6 +11,7 @@ const MongoStore = require("connect-mongo");
 const session = require('express-session');
 const flash = require('express-flash');
 const methodOverride = require("method-override");
+const { cloudinary } = require('./src/utils/cloudinary-config.js');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +29,7 @@ require('./src/models/ReviewModel.js');
 require('./src/models/ProductModel.js');
 require('./src/models/UserModel.js');
 require('./src/models/TokenModel.js');
+require('./src/models/siteDataModel.js');
 
 const User = require('./src/models/UserModel.js');
 
@@ -81,6 +83,7 @@ const verifyRouter = require('./src/routes/verify.js');
 app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/verify', verifyRouter);
+app.use('/site' , require('./src/routes/site.js'));
 
 const initializePass = require("./src/utils/passport-config");
 initializePass(

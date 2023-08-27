@@ -38,17 +38,8 @@ const sendEmail = async (template, options) => {
             break;
     }
     console.log(mailOptions)
-    /*
-    transport.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(`Email sent: ${info.response}`);
-        }
-    });*/
 }
 
-//sendEmail("uonder50@gmail.com", "Email Verification", "Teste", "<h1>Teste</h1>")
 
 
 
