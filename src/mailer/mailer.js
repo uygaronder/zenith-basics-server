@@ -37,7 +37,7 @@ const sendEmail = async (template, options) => {
         default:
             break;
     }
-    console.log(mailOptions)
+    //console.log(mailOptions)
 }
 
 

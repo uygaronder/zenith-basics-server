@@ -105,6 +105,13 @@ app.get('/', (req, res) => {
     res.send('Hello World');
 });
 
+const fakeData = require("./fakeData.js");
+
+app.get("/importFakeData" , async (req , res) => {
+    res.send(fakeData.fakeData);
+});
+    
+
 app.listen(process.env.PORT, () => {
     console.log(`Server Running on ${process.env.PORT}`);
 });
