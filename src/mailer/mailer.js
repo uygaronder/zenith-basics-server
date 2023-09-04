@@ -38,6 +38,7 @@ const sendEmail = async (template, options) => {
             break;
     }
     //console.log(mailOptions)
+    console.log(`Sent a ${template} email to ${options.email}`);
 }
 
 
