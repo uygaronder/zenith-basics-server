@@ -11,6 +11,15 @@ const productSchema = new mongoose.Schema({
     description: String,
     category: String,
     images: Array,
+    specifications: {
+        type: Array,
+        default: [
+            {
+                specName: String,
+                specValue: String,
+            }
+        ],
+    },
     rating: {
         type: Number,
         default: 0
