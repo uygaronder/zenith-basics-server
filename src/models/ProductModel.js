@@ -11,12 +11,11 @@ const productSchema = new mongoose.Schema({
     description: String,
     category: String,
     images: Array,
-    specifications: {
+    aboutItem: {
         type: Array,
         default: [
             {
-                specName: String,
-                specValue: String,
+                description: String,
             }
         ],
     },
