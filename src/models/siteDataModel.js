@@ -102,18 +102,6 @@ siteDataSchema.methods.removeCategory = function (id) {
     return this.save();
 };
 
-siteDataSchema.methods.addSubCategory = function (id, slug, categoryID) {
-    const category = this.category.find((item) => item._id.toString() === categoryID);
-    category.subCategory.push({ id, slug });
-    return this.save();
-};
-
-siteDataSchema.methods.removeSubCategory = function (id, categoryID) {
-    const category = this.category.find((item) => item._id.toString() === categoryID);
-    category.subCategory = category.subCategory.filter((item) => item._id.toString() !== id);
-    return this.save();
-};
-
 siteDataSchema.methods.addProductToCategory = function (id, categoryID) {
     const category = this.category.find((item) => item._id.toString() === categoryID);
     category.products.push({ id });
