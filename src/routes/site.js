@@ -15,9 +15,19 @@ siteRouter.post("/newCategory", async (req, res) => {
     const {category} = req.body;
     const siteDataQuery = Site.findOne({}).exec();
     const siteData = await siteDataQuery;
-    //console.log(siteData)
-    siteData.addCategory(category);
-    res.json(siteData);
+    siteData.addCategory(category).then((result) => {
+        if(result){
+            res.json({status: "success"});
+        } else {
+            res.json({status: "failed"});
+        }
+    });
+});
+
+siteRouter.get("/products", async (req, res) => {
+    const productsQuery = Product.find({}).exec();
+    const products = await productsQuery;
+    res.json(products);
 });
 
 module.exports = siteRouter;
