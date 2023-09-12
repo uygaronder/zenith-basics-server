@@ -37,17 +37,6 @@ const siteDataSchema = new mongoose.Schema({
                     id: String,
                 }
             ],
-            subCategory: [
-                {
-                    id: String,
-                    slug: String,
-                    products: [
-                        {
-                            id: String,
-                        }
-                    ],
-                }
-            ]
         }
     ],
 });
@@ -92,12 +81,16 @@ siteDataSchema.methods.removeNewProduct = function (id) {
     return this.save();
 };
 
-siteDataSchema.methods.addCategory = function (id, slug) {
-    this.category.push({ id, slug });
-    return this.save();
+siteDataSchema.methods.addCategory = function (slug) {
+    if(this.category.filter((item) => item.slug === slug).length === 0){
+        this.category.push({ slug });
+        return this.save();
+    } else {
+        return false;
+    }
 };
 
-siteDataSchema.methods.removeCategory = function (id) {
+siteDataSchema.methods.removeCategoryById = function (id) {
     this.category = this.category.filter((item) => item._id.toString() !== id);
     return this.save();
 };
@@ -111,20 +104,6 @@ siteDataSchema.methods.addProductToCategory = function (id, categoryID) {
 siteDataSchema.methods.removeProductFromCategory = function (id, categoryID) {
     const category = this.category.find((item) => item._id.toString() === categoryID);
     category.products = category.products.filter((item) => item._id.toString() !== id);
-    return this.save();
-};
-
-siteDataSchema.methods.addProductToSubCategory = function (id, subCategoryID, categoryID) {
-    const category = this.category.find((item) => item._id.toString() === categoryID);
-    const subCategory = category.subCategory.find((item) => item._id.toString() === subCategoryID);
-    subCategory.products.push({ id });
-    return this.save();
-};
-
-siteDataSchema.methods.removeProductFromSubCategory = function (id, subCategoryID, categoryID) {
-    const category = this.category.find((item) => item._id.toString() === categoryID);
-    const subCategory = category.subCategory.find((item) => item._id.toString() === subCategoryID);
-    subCategory.products = subCategory.products.filter((item) => item._id.toString() !== id);
     return this.save();
 };
 

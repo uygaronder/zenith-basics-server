@@ -57,12 +57,4 @@ productSchema.methods.addReview = function (review) {
     return this.save();
 }
 
-productSchema.methods.addCategory = function (category) {
-    this.category.push(category);
-    console.log(this.category);
-
-    //return this.save();
-    return
-}
-
 module.exports = mongoose.model('Product', productSchema);

@@ -12,12 +12,12 @@ siteRouter.get("/", async (req, res) => {
 });
 
 siteRouter.post("/newCategory", async (req, res) => {
-    const { id, slug } = req.body;
+    const {category} = req.body;
     const siteDataQuery = Site.findOne({}).exec();
     const siteData = await siteDataQuery;
-    console.log(siteData);
-    //siteData.addCategory(id, slug);
-    //res.json(siteData);
+    //console.log(siteData)
+    siteData.addCategory(category);
+    res.json(siteData);
 });
 
 module.exports = siteRouter;
