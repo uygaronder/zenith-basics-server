@@ -12,9 +12,10 @@ const session = require('express-session');
 const flash = require('express-flash');
 const methodOverride = require("method-override");
 const { cloudinary } = require('./src/utils/cloudinary-config.js');
+const bodyParser = require('body-parser');
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit:"50mb"}));
+app.use(express.urlencoded({ limit:"50mb",extended: true }));
 app.use(flash());
 app.use(cors({
     origin: process.env.APP_URL,
@@ -76,14 +77,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride("_method"))
 
+
 const productRouter = require('./src/routes/product.js');
 const userRouter = require('./src/routes/user.js');
 const verifyRouter = require('./src/routes/verify.js');
+const siteRouter = require('./src/routes/site.js');
 
 app.use('/product', productRouter);
 app.use('/user', userRouter);
 app.use('/verify', verifyRouter);
-app.use('/site' , require('./src/routes/site.js'));
+app.use('/site' , siteRouter);
 
 const initializePass = require("./src/utils/passport-config");
 initializePass(

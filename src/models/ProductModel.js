@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const productSchema = new mongoose.Schema({
-    name: {
+    productName: {
         type: String,
         required: true
     },
-    price: Number,
+    productPrice: Number,
     description: String,
-    category: String,
+    productCategory: String,
     images: Array,
-    aboutItem: {
+    aboutItems: {
         type: Array,
         default: [
             {
@@ -44,7 +44,11 @@ const productSchema = new mongoose.Schema({
         sold: Number,
 
     },
-    stock: Number,
+    stockQuantity: Number,
+    stockStatus: {
+        type: String,
+        default: "In Stock"
+    },
     reviews: {
         type: Array,
         default: [
