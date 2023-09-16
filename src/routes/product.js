@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const Product = mongoose.model("Product");
 const Review = mongoose.model("Review");
+const Site = mongoose.model("Site");
 
 const { cloudinary } = require("../utils/cloudinary-config.js");
 
@@ -24,7 +25,13 @@ productRouter.post("/new", async (req, res) => {
     console.log("product: ", newProduct);
 
     const uploadedImages = await uploadImages(req.body.images);
+    newProduct.aboutItems.pop();
     newProduct.images = uploadedImages;
+
+    Site.findOne({}).then(site => {
+        site.products.push(newProduct._id);
+        site.save();
+    });
 
     const savedProduct = await newProduct.save();
     res.json(savedProduct);
