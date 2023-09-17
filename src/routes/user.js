@@ -86,4 +86,16 @@ userRouter.delete("/logout", (req, res, next) => {
     res.json({message: "success"});
 });
 
+userRouter.post("/addProductToCart", authenticated, (req, res, next) => {
+    User.findById(req.session.passport.user)
+        .then(user => {
+            user.addProductToCart(req.body.id, req.body.quantity)
+                .then(() => {
+                    res.json({message: "success"});
+                })
+                .catch(next);
+        })
+        .catch(next);
+});
+
 module.exports = userRouter;

@@ -28,6 +28,11 @@ const siteDataSchema = new mongoose.Schema({
             id: String,
         }
     ],
+    featuredProduct: [
+        {
+            id: String,
+        }
+    ],
     category: [
         {
             id: String,
