@@ -288,11 +288,11 @@ userSchema.methods.removeCartItem = async function (id) {
 
 userSchema.methods.updateCartItem = async function (id, quantity) {
     try {
-        this.cart = this.cart.map((item) => {
+        this.cart.map((item) => {
             if (item.productId === id) {
                 item.quantity = quantity;
+                this.markModified('cart');
             }
-            return item;
         });
     } catch (err) {
         console.log(err);

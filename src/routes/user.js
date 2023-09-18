@@ -86,14 +86,26 @@ userRouter.delete("/logout", (req, res, next) => {
     res.json({message: "success"});
 });
 
-userRouter.post("/addProductToCart", authenticated, (req, res, next) => {
+userRouter.post("/addProductToCart", (req, res, next) => {
+    console.log(req.body);
     User.findById(req.session.passport.user)
         .then(user => {
-            user.addProductToCart(req.body.id, req.body.quantity)
-                .then(() => {
-                    res.json({message: "success"});
-                })
-                .catch(next);
+            if(user.cart.filter(item => item.product == req.body.id).length > 0) {
+                user.updateCartItem(req.body.productId, req.body.quantity)
+                    .then(() => {
+                        user.save().then(() => {
+                            res.json({message: "success"});
+                        })  
+                    })
+            } else {
+                user.newCartItem(req.body)
+                    .then(() => {
+                        user.save().then(() => {
+                            res.json({message: "success"});
+                        })
+                            
+                    })
+            }
         })
         .catch(next);
 });
