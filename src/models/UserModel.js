@@ -29,7 +29,15 @@ const userSchema = new mongoose.Schema({
     },
     wishlist: Array,
     notifications: Array,
-    cart: Array,
+    cart: {
+        type: Array,
+        default: [
+            {
+                productId: String,
+                quantity: Number
+            }
+        ],
+    },
     orders: Array,
     address: Array,
     payment: Array,
