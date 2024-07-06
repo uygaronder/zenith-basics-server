@@ -90,7 +90,9 @@ userRouter.post("/addProductToCart", (req, res, next) => {
     console.log(req.body);
     User.findById(req.session.passport.user)
         .then(user => {
+            console.log(user.cart);
             if(user.cart.filter(item => item.product == req.body.id).length > 0) {
+                console.log("item exists");
                 user.updateCartItem(req.body.productId, req.body.quantity)
                     .then(() => {
                         user.save().then(() => {

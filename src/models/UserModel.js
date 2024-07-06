@@ -31,12 +31,6 @@ const userSchema = new mongoose.Schema({
     notifications: Array,
     cart: {
         type: Array,
-        default: [
-            {
-                productId: String,
-                quantity: Number
-            }
-        ],
     },
     orders: Array,
     address: Array,
@@ -265,14 +259,19 @@ userSchema.methods.removeWishlistedItem = async function (id) {
 userSchema.methods.clearCart = async function () {
     try {
         this.cart = [];
+        this.markModified('cart');
     } catch (err) {
         console.log(err);
     }
 };
 
 userSchema.methods.newCartItem = async function (item) {
+    console.log('item: ', item);
+    console.log('this.cart: ', this.cart);
     try {
         this.cart.push(item);
+        console.log('this.cart: ', this.cart);
+        this.markModified('cart');
     } catch (err) {
         console.log(err);
     }
@@ -281,6 +280,7 @@ userSchema.methods.newCartItem = async function (item) {
 userSchema.methods.removeCartItem = async function (id) {
     try {
         this.cart = this.cart.filter((item) => item.productId !== id);
+        this.markModified('cart');
     } catch (err) {
         console.log(err);
     }
